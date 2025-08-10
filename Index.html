@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulls and Cows Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 50px;
+    }
+    h1 {
+      color: #333;
+    }
+    input {
+      padding: 8px;
+      font-size: 16px;
+      width: 120px;
+      text-align: center;
+    }
+    button {
+      padding: 8px 15px;
+      font-size: 16px;
+      margin-left: 10px;
+      cursor: pointer;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .log {
+      margin-top: 20px;
+      background: white;
+      padding: 15px;
+      width: 300px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+    .log p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Bulls and Cows</h1>
+  <p>Guess the 4-digit number (digits 1-9, no repeats)</p>
+
+  <input type="text" id="guessInput" placeholder="Enter guess">
+  <button onclick="checkGuess()">Guess</button>
+
+  <div class="log" id="log"></div>
+
+  <script>
+    let secretNumber = generateNumber();
+    // Uncomment for debugging:
+    // console.log("Secret:", secretNumber);
+
+    function generateNumber() {
+      let digits = [];
+      while (digits.length < 4) {
+        let rand = Math.floor(Math.random() * 9) + 1;
+        if (!digits.includes(rand)) {
+          digits.push(rand);
+        }
+      }
+      return digits.join('');
+    }
+
+    function checkGuess() {
+      let guess = document.getElementById("guessInput").value.trim();
+      let logDiv = document.getElementById("log");
+
+      if (!isValidGuess(guess)) {
+        logDiv.innerHTML += `<p>❌ Invalid guess: ${guess}</p>`;
+        return;
+      }
+
+      let bulls = 0;
+      let cows = 0;
+
+      for (let i = 0; i < 4; i++) {
+        if (guess[i] === secretNumber[i]) {
+          bulls++;
+        } else if (secretNumber.includes(guess[i])) {
+          cows++;
+        }
+      }
+
+      logDiv.innerHTML += `<p>Guess: ${guess} → 🐂 ${bulls} Bulls, 🐄 ${cows} Cows</p>`;
+
+      if (bulls === 4) {
+        logDiv.innerHTML += `<p>🎉 You guessed it! The number was ${secretNumber}</p>`;
+      }
+    }
+
+    function isValidGuess(guess) {
+      return (
+        guess.length === 4 &&
+        /^[1-9]+$/.test(guess) &&
+        new Set(guess).size === 4
+      );
+    }
+  </script>
+
+</body>
+</html>
